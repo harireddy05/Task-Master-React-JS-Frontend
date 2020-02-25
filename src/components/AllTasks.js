@@ -8,7 +8,7 @@ class AllTasks extends Component {
     return (
       <div>
         {this.props.alltasks.map((task) => (
-          <Task key={task.id} task={task} toggleComplete={this.props.toggleComplete}/>
+          <Task key={task.id} task={task} delTask={this.props.delTask} toggleComplete={this.props.toggleComplete}/>
         ))}
       </div>
     );

@@ -3,6 +3,7 @@
 }
 
 .App-title {
+  text-align: center;
   padding: 15px;
   color: white;
 }
@@ -14,4 +15,17 @@
 #App-container {
   width: 90%;
   margin: auto;
+}
+
+.Add-btnSave {
+  display: inline-block;
+  border: none;
+  background: #555555;
+  color: white;
+  padding: 7px 20px;
+  cursor: pointer;
+}
+
+.Add-btnSave:hover {
+  background: #666666;
 }
