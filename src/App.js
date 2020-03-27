@@ -11,29 +11,16 @@ class App extends Component {
     super(props)
 
     this.state = {
-      alltasks: [
-        {
-          id: uuid.v4(),
-          title: "something game",
-          isComplete: true
-        },
-        {
-          id: uuid.v4(),
-          title: "something not so important",
-          isComplete: false
-        },
-        {
-          id: uuid.v4(),
-          title: "something stupid",
-          isComplete: false
-        },
-        {
-          id: uuid.v4(),
-          title: "dayum son stupid",
-          isComplete: false
-        }
-      ]
+      alltasks: null,
+      loading: true
     }
+  }
+
+  async componentDidMount() {
+    const restapi_url = "http://localhost:3030/api/tasks";
+    const response = await fetch(restapi_url);
+    const data = await response.json()
+    this.setState({ alltasks: data, loading: false })
   }
 
   toggleComplete = (id) => {
@@ -57,22 +44,37 @@ class App extends Component {
       title: title,
       isComplete: false
     }
-    this.setState({ alltasks: [...this.state.alltasks, newTask]})
+    this.setState({ alltasks: [...this.state.alltasks, newTask] })
   }
 
   render() {
-    return (
-      <div className="App">
-        <Header />
-        <div id="App-container" style={{ paddingBottom: '20px' }}>
-          <AddNew addTask={this.addTask} />
+    if (this.state.loading) {
+      return (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <div style={{ fontStyle: 'oblique' }}>
+            <h4>Loading...</h4>
+          </div>
+          <p style={{ fontVariant: 'initial' }}>
+            If this page loads for too long, please reach out to the developer.
+            </p>
         </div>
-        <div id="App-container">
-          <AllTasks alltasks={this.state.alltasks} toggleComplete={this.toggleComplete} delTask={this.delTask} />
+      )
+    }
+    else {
+      return (
+        <div className="App">
+          <Header />
+          <div id="App-container" style={{ paddingBottom: '20px' }}>
+            <AddNew addTask={this.addTask} />
+          </div>
+          <div id="App-container">
+            <AllTasks alltasks={this.state.alltasks} toggleComplete={this.toggleComplete} delTask={this.delTask} />
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
+  
 }
 
 export default App;
