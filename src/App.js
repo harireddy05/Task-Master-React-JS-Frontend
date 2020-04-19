@@ -19,8 +19,8 @@ class App extends Component {
   async componentDidMount() {
     const restapi_url = "http://localhost:3030/api/tasks";
     const response = await fetch(restapi_url);
-    const data = await response.json()
-    this.setState({ alltasks: data, loading: false })
+    const data = await response.json();
+    this.setState({ alltasks: data, loading: false });
   }
 
   toggleComplete = (id) => {
@@ -35,6 +35,21 @@ class App extends Component {
   }
 
   delTask = (id) => {
+    const data = { 'id': id };
+    fetch('http://localhost:3030/deletetask', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
     this.setState({ alltasks: [...this.state.alltasks.filter(task => task.id !== id)] })
   }
 
@@ -44,6 +59,20 @@ class App extends Component {
       title: title,
       isComplete: false
     }
+    fetch('http://localhost:3030/addtask', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newTask),
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
     this.setState({ alltasks: [...this.state.alltasks, newTask] })
   }
 
@@ -55,7 +84,7 @@ class App extends Component {
             <h4>Loading...</h4>
           </div>
           <p style={{ fontVariant: 'initial' }}>
-            If this page loads for too long, please reach out to the developer.
+            If this page loads for more than 10 minutes, please reach out to the developer.
             </p>
         </div>
       )
@@ -74,7 +103,7 @@ class App extends Component {
       );
     }
   }
-  
+
 }
 
 export default App;
