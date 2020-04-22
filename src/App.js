@@ -14,6 +14,8 @@ class App extends Component {
       alltasks: null,
       loading: true
     }
+
+    this.addTask = this.addTask.bind(this)
   }
 
   async componentDidMount() {
@@ -50,31 +52,28 @@ class App extends Component {
       .catch((error) => {
         console.error('Error:', error);
       });
+
     this.setState({ alltasks: [...this.state.alltasks.filter(task => task.id !== id)] })
   }
 
-  addTask = (title) => {
+  async addTask(title) {
     const newTask = {
       id: uuid.v4(),
       title: title,
       isComplete: false
     }
-    fetch('http://localhost:3030/addtask', {
+    const api_add_url = "http://localhost:3030/addtask";
+    const response = await fetch(api_add_url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(newTask),
-    })
-      .then((response) => response.text())
-      .then((data) => {
-        console.log('Success:', data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-    this.setState({ alltasks: [...this.state.alltasks, newTask] })
+    });
+    const data = await response.json();
+    this.setState({ alltasks: data, loading: false });
   }
+
 
   render() {
     if (this.state.loading) {
